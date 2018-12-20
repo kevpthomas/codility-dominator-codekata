@@ -5,8 +5,12 @@ using Moq.AutoMock;
 
 namespace Dominator
 {
-    public abstract class UnitTestBase : IDisposable
+    public abstract class UnitTestBase<TUnderTest>
+        where TUnderTest : class
     {
+        private TUnderTest _testInstance;
+        protected TUnderTest TestInstance => _testInstance ?? (_testInstance = AutoMocker.CreateInstance<TUnderTest>());
+
         protected AutoMocker AutoMocker;
 
         protected UnitTestBase()
@@ -33,19 +37,7 @@ namespace Dominator
 
         public virtual void Dispose()
         {
-        }
-    }
-
-    public abstract class UnitTestBase<TUnderTest> : UnitTestBase where TUnderTest : class
-    {
-        private TUnderTest _testInstance;
-        protected TUnderTest TestInstance => _testInstance ?? (_testInstance = AutoMocker.CreateInstance<TUnderTest>());
-
-        public override void Dispose()
-        {
             _testInstance = null;
-
-            base.Dispose();
         }
     }
 }
