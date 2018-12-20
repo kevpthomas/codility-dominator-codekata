@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Shouldly;
 using Xbehave;
 using Xunit;
@@ -16,6 +17,16 @@ namespace Dominator
             dominator.ShouldBe(-1);
         }
 
+        [Scenario]
+        public void SingleValueArray()
+        {
+            var sourceArray = new[] {Faker.Random.Int()};
+
+            var dominator = TestInstance.FindDominator(sourceArray);
+
+            dominator.ShouldBe(sourceArray.First());
+        }
+
         /*
          * https://app.codility.com/programmers/lessons/8-leader/dominator/
          * dominator is a value that occurs in more than half of the elements in array
@@ -24,6 +35,10 @@ namespace Dominator
          * values in array can be int.Min to int.Max
          *
          * -1 if array has no dominator (interestingly, the dominator could legitimately be the value -1)
+         * -1 if array is empty
+         * the value at index 0 if array has length of 1
+         * for array of length 2, the value at either index if both are the same, otherwise -1
+         *
          * the dominant value if there is one
          */
     }
@@ -32,7 +47,9 @@ namespace Dominator
     {
         public int FindDominator(int[] sourceArray)
         {
-            return -1;
+            if (!sourceArray.Any()) return -1;
+
+            return sourceArray[0];
         }
     }
 }
