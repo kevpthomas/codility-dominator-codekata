@@ -1,13 +1,18 @@
-﻿using Bogus;
+﻿using System;
+using Bogus;
 using Moq;
 using Moq.AutoMock;
-using Xbehave;
 
 namespace Dominator
 {
-    public abstract class UnitTestBase
+    public abstract class UnitTestBase : IDisposable
     {
         protected AutoMocker AutoMocker;
+
+        protected UnitTestBase()
+        {
+            AutoMocker = new AutoMocker(MockBehavior.Loose);
+        }
 
         protected Faker Faker => new Faker();
 
@@ -26,10 +31,8 @@ namespace Dominator
             return AutoMocker.GetMock<T>().Object;
         }
 
-        [Background]
-        public virtual void Setup()
+        public virtual void Dispose()
         {
-            AutoMocker = new AutoMocker(MockBehavior.Loose);
         }
     }
 
@@ -38,12 +41,11 @@ namespace Dominator
         private TUnderTest _testInstance;
         protected TUnderTest TestInstance => _testInstance ?? (_testInstance = AutoMocker.CreateInstance<TUnderTest>());
 
-        [Background]
-        public override void Setup()
+        public override void Dispose()
         {
             _testInstance = null;
 
-            base.Setup();
+            base.Dispose();
         }
     }
 }

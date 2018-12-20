@@ -1,14 +1,12 @@
-using System;
 using System.Linq;
 using Shouldly;
-using Xbehave;
 using Xunit;
 
 namespace Dominator
 {
     public class DominatorFinderTests : UnitTestBase<DominatorFinder>
     {
-        [Scenario]
+        [Fact]
         public void EmptyArray()
         {
             var sourceArray = new int[0];
@@ -17,7 +15,7 @@ namespace Dominator
             dominator.ShouldBe(-1);
         }
 
-        [Scenario]
+        [Fact]
         public void SingleValueArray()
         {
             var sourceArray = new[] {Faker.Random.Int()};
