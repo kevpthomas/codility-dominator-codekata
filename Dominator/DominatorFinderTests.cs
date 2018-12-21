@@ -85,36 +85,16 @@ namespace Dominator
 
             dominator.ShouldBe(expected);
         }
-
-        /*
-         * https://app.codility.com/programmers/lessons/8-leader/dominator/
-         * dominator is a value that occurs in more than half of the elements in array
-         *
-         * array can be length 0 to 100,000
-         * values in array can be int.Min to int.Max
-         *
-         * -1 if array has no dominator (interestingly, the dominator could legitimately be the value -1)
-         *
-         * the dominant value if there is one
-         */
-    }
-
-    public class DominatorFinder
-    {
-        public int FindDominator(int[] sourceArray)
+        
+        [Theory]
+        [InlineData(3, 4, 3, 2, 3, -1, 3, 3, 3)]
+        public void EightValueArrayExample(int value1, int value2, int value3, int value4, int value5, int value6, int value7, int value8, int expected)
         {
-            if (!sourceArray.Any()) return -1;
+            var sourceArray = new[] {value1, value2, value3, value4, value5, value6, value7, value8};
 
-            var counts = (from i in sourceArray
-                group i by i
-                into result
-                select new {Value = result.Key, Count = result.Count()}).ToList();
+            var dominator = TestInstance.FindDominator(sourceArray);
 
-            var maxCount = counts.Max(x => x.Count);
-
-            return maxCount == 1 && maxCount != sourceArray.Length
-                ? -1 
-                : counts.First(x => x.Count == maxCount).Value;
+            dominator.ShouldBe(expected);
         }
     }
 }
