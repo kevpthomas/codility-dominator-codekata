@@ -6,13 +6,16 @@ namespace Dominator
 {
     public class DominatorFinderTests : UnitTestBase<DominatorFinder>
     {
+        private const int NoDominator = -1;
+
         [Fact]
         public void EmptyArray()
         {
             var sourceArray = new int[0];
+
             var dominator = TestInstance.FindDominator(sourceArray);
 
-            dominator.ShouldBe(-1);
+            dominator.ShouldBe(NoDominator);
         }
 
         [Fact]
@@ -25,6 +28,28 @@ namespace Dominator
             dominator.ShouldBe(sourceArray.First());
         }
 
+        [Fact]
+        public void TwoValueArrayDifferentValue()
+        {
+            var aValue = Faker.Random.Int();
+            var sourceArray = new[] {aValue, Faker.Random.IntExcept(except: aValue)};
+
+            var dominator = TestInstance.FindDominator(sourceArray);
+
+            dominator.ShouldBe(NoDominator);
+        }
+
+        [Fact]
+        public void TwoValueArraySameValue()
+        {
+            var sameValue = Faker.Random.Int();
+            var sourceArray = new[] { sameValue, sameValue };
+
+            var dominator = TestInstance.FindDominator(sourceArray);
+
+            dominator.ShouldBe(sameValue);
+        }
+
         /*
          * https://app.codility.com/programmers/lessons/8-leader/dominator/
          * dominator is a value that occurs in more than half of the elements in array
@@ -33,9 +58,6 @@ namespace Dominator
          * values in array can be int.Min to int.Max
          *
          * -1 if array has no dominator (interestingly, the dominator could legitimately be the value -1)
-         * -1 if array is empty
-         * the value at index 0 if array has length of 1
-         * for array of length 2, the value at either index if both are the same, otherwise -1
          *
          * the dominant value if there is one
          */
@@ -46,6 +68,8 @@ namespace Dominator
         public int FindDominator(int[] sourceArray)
         {
             if (!sourceArray.Any()) return -1;
+
+            if (sourceArray.Length == 2 && sourceArray[0] != sourceArray[1]) return -1;
 
             return sourceArray[0];
         }
