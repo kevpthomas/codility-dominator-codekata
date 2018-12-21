@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 
 namespace Dominator
@@ -11,6 +12,7 @@ namespace Dominator
         public int FindDominator(int[] sourceArray)
         {
             if (!sourceArray.Any()) return -1;
+            var dominatorCutoff = sourceArray.Length / 2;
 
             var counts = (from i in sourceArray
                 group i by i
@@ -19,9 +21,11 @@ namespace Dominator
 
             var maxCount = counts.Max(x => x.Count);
 
-            return maxCount == 1 && maxCount != sourceArray.Length
-                ? -1 
-                : counts.First(x => x.Count == maxCount).Value;
+            if (maxCount <= dominatorCutoff) return -1;
+
+            var dominatorValue = counts.First(x => x.Count == maxCount).Value;
+
+            return Array.IndexOf(sourceArray, dominatorValue);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Dominator
 
             var dominator = TestInstance.FindDominator(sourceArray);
 
-            dominator.ShouldBe(sourceArray.First());
+            dominator.ShouldBe(0);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace Dominator
 
             var dominator = TestInstance.FindDominator(sourceArray);
 
-            dominator.ShouldBe(sameValue);
+            dominator.ShouldBe(0);
         }
         
         [Fact]
@@ -70,13 +70,13 @@ namespace Dominator
 
             var dominator = TestInstance.FindDominator(sourceArray);
 
-            dominator.ShouldBe(sameValue);
+            dominator.ShouldBe(0);
         }
         
         [Theory]
-        [InlineData(1, 2, 2, 2)]
-        [InlineData(2, 2, 1, 2)]
-        [InlineData(2, 1, 2, 2)]
+        [InlineData(1, 2, 2, 1)]
+        [InlineData(2, 2, 1, 0)]
+        [InlineData(2, 1, 2, 0)]
         public void ThreeValueArrayOneValueDifferent(int value1, int value2, int value3, int expected)
         {
             var sourceArray = new[] {value1, value2, value3};
@@ -87,10 +87,21 @@ namespace Dominator
         }
         
         [Theory]
-        [InlineData(3, 4, 3, 2, 3, -1, 3, 3, 3)]
+        [InlineData(3, 4, 3, 2, 3, -1, 3, 3, 0)]
         public void EightValueArrayExample(int value1, int value2, int value3, int value4, int value5, int value6, int value7, int value8, int expected)
         {
             var sourceArray = new[] {value1, value2, value3, value4, value5, value6, value7, value8};
+
+            var dominator = TestInstance.FindDominator(sourceArray);
+
+            dominator.ShouldBe(expected);
+        }
+        
+        [Theory]
+        [InlineData(2, 1, 1, 3, -1)]
+        public void ExactlyHalfSameValue(int value1, int value2, int value3, int value4, int expected)
+        {
+            var sourceArray = new[] {value1, value2, value3, value4};
 
             var dominator = TestInstance.FindDominator(sourceArray);
 
